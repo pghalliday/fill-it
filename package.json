@@ -24,8 +24,17 @@
     "url": "https://github.com/pghalliday/fill-it/issues"
   },
   "homepage": "https://github.com/pghalliday/fill-it#readme",
-  "dependencies": {},
+  "dependencies": {
+    "mobx": "^5.13.0",
+    "mobx-react": "^6.1.3",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
   "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"
   }
