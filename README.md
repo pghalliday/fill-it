@@ -4,6 +4,8 @@ A chrome extension to fill forms
 
 ## Development notes
 
+The development tool chain depends on [NodeJS and NPM](https://nodejs.org/).
+
 After cloning run the following command to download dependencies
 
 ```
