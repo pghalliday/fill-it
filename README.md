@@ -2,7 +2,7 @@
 
 A chrome plugin to fill known forms
 
-## Devlopment notes
+## Development notes
 
 After cloning run the following command to download dependencies
 
