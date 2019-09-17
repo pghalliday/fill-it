@@ -51,4 +51,7 @@ function init(port) {
 
 function extract(list) {
 	console.log(list);
+	chrome.storage.local.set({extracted: list}, function() {
+		chrome.runtime.openOptionsPage();
+	});
 }
