@@ -1,7 +1,7 @@
 {
   "name": "fill-it",
   "version": "1.0.0",
-  "description": "A chrome plugin to fill known forms",
+  "description": "A chrome extension to fill forms",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
