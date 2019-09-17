@@ -1,8 +1,8 @@
 {
 	"name": "Fill It",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"description": "Fill known forms",
-	"permissions": ["activeTab", "declarativeContent", "storage"],
+	"permissions": ["activeTab", "storage"],
 	"background": {
 		"scripts": ["background.js"],
 		"persistent": false

@@ -1,0 +1,32 @@
+{
+  "name": "fill-it",
+  "version": "1.0.0",
+  "description": "A chrome plugin to fill known forms",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack --config webpack.config.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pghalliday/fill-it.git"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "forms",
+    "autofill"
+  ],
+  "author": "Peter Halliday <pghalliday@gmail.com> (https://pghalliday.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pghalliday/fill-it/issues"
+  },
+  "homepage": "https://github.com/pghalliday/fill-it#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  }
+}
