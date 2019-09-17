@@ -1,16 +1,32 @@
-let changeColor = document.getElementById('changeColor');
+const extractFormFields = document.getElementById('extractFormFields');
 
-chrome.storage.sync.get('color', function(data) {
-	changeColor.style.backgroundColor = data.color;
-	changeColor.setAttribute('value', data.color);
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+	const tabId = tabs[0].id;
+	const port = chrome.tabs.connect(tabId);
+	port.onMessage.addListener(function(message) {
+		console.log(message);
+		switch (message.type) {
+			case 'CONNECTED':
+				init(port);
+				break;
+			case 'EXTRACTED':
+				extract(message.data);
+				break;
+			default:
+				console.error(new Error('Unknown message type: ' + message.type))
+				break;
+		}
+	});
 });
 
-changeColor.onclick = function(element) {
-	let color = element.target.value;
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-		chrome.tabs.executeScript(
-			tabs[0].id,
-			{code: 'document.body.style.backgroundColor = "' + color + '";'}
-		);
-	});
-};
+function init(port) {
+	extractFormFields.onclick = function() {
+		port.postMessage({
+			type: 'EXTRACT',
+		})
+	};
+}
+
+function extract(list) {
+	console.log(list);
+}
