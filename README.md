@@ -1,6 +1,6 @@
 # fill-it
 
-A chrome plugin to fill known forms
+A chrome extension to fill forms
 
 ## Development notes
 
