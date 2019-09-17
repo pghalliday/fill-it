@@ -1,3 +1,24 @@
+const query = {
+	fields: ['tagName', 'id', 'className'],
+	tags: {
+		'INPUT': {
+			fields: ['type', 'value'],
+			excludes: [{
+				type: 'hidden',
+			}, {
+				type: 'button',
+			}, {
+				type: 'submit',
+			}, {
+				type: 'image',
+			}],
+		},
+		'TEXTAREA': {
+			fields: ['innerHTML'],
+		},
+	},
+};
+
 const extractFormFields = document.getElementById('extractFormFields');
 
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -23,6 +44,7 @@ function init(port) {
 	extractFormFields.onclick = function() {
 		port.postMessage({
 			type: 'EXTRACT',
+			data: query,
 		})
 	};
 }
