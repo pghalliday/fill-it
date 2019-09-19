@@ -10,7 +10,7 @@ import {
 } from '../lib/chrome-storage';
 
 class Store {
-	@observable fieldSets = [];
+	@observable fieldSets;
 	@observable extracted;
 	@observable error;
 
@@ -27,7 +27,12 @@ class Store {
 	}
 
 	@computed get report() {
-		return JSON.stringify(this, null, 2)
+		return JSON.stringify(this, null, 2);
+	}
+
+	@computed get nodes() {
+		return [
+		];
 	}
 }
 

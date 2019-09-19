@@ -1,36 +1,46 @@
+import {
+	messageTypes,
+	tagNames,
+	inputTypes,
+	fields,
+} from '../lib/constants';
+import {
+	setExtracted,
+} from '../lib/chrome-storage';
+
 const query = {
-	fields: ['tagName', 'id', 'className'],
+	fields: [fields.TAG_NAME, fields.ID],
 	tags: {
-		'INPUT': {
-			fields: ['type', 'value'],
+		[tagNames.INPUT]: {
+			fields: [fields.TYPE, fields.VALUE],
 			excludes: [{
-				type: 'hidden',
+				type: inputTypes.HIDDEN,
 			}, {
-				type: 'button',
+				type: inputTypes.BUTTON,
 			}, {
-				type: 'submit',
+				type: inputTypes.SUBMIT,
 			}, {
-				type: 'image',
+				type: inputTypes.IMAGE,
 			}],
 		},
-		'TEXTAREA': {
-			fields: ['innerHTML'],
+		[tagNames.TEXTAREA]: {
+			fields: [fields.INNER_HTML],
 		},
 	},
 };
 
 const extractFormFields = document.getElementById('extractFormFields');
 
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+chrome.tabs.query({active: true, currentWindow: true}, tabs => {
 	const tabId = tabs[0].id;
 	const port = chrome.tabs.connect(tabId);
-	port.onMessage.addListener(function(message) {
+	port.onMessage.addListener(message => {
 		console.log(message);
 		switch (message.type) {
-			case 'CONNECTED':
+			case messageTypes.CONNECTED:
 				init(port);
 				break;
-			case 'EXTRACTED':
+			case messageTypes.EXTRACTED:
 				extract(message.data);
 				break;
 			default:
@@ -41,17 +51,16 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 });
 
 function init(port) {
-	extractFormFields.onclick = function() {
+	extractFormFields.onclick = () => {
 		port.postMessage({
-			type: 'EXTRACT',
+			type: messageTypes.EXTRACT,
 			data: query,
 		})
 	};
 }
 
-function extract(list) {
+async function extract(list) {
 	console.log(list);
-	chrome.storage.local.set({extracted: list}, function() {
-		chrome.runtime.openOptionsPage();
-	});
+	await setExtracted(list);
+	chrome.runtime.openOptionsPage();
 }

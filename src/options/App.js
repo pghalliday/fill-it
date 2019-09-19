@@ -12,7 +12,9 @@ import {
 	NavbarHeading,
 	NavbarDivider,
 	Button,
+	Tree,
 	Alignment,
+	Classes,
 } from '@blueprintjs/core';
 
 @observer
@@ -33,10 +35,19 @@ export class App extends React.Component {
 				        <Button className="bp3-minimal" icon="menu" />
 					</NavbarGroup>
 				</Navbar>
+                <Tree
+                    contents={store.nodes}
+                    onNodeClick={this.handleNodeClick}
+                    onNodeCollapse={this.handleNodeCollapse}
+                    onNodeExpand={this.handleNodeExpand}
+                    className={Classes.ELEVATION_0}
+                />
 				<div>
-					<pre>{ store.report }</pre>
+					<pre>{store.report}</pre>
 				</div>
 			</div>
 		);
 	}
+
+
 }

@@ -1,13 +1,14 @@
-const EXTRACTED = 'extracted';
-const FIELD_SETS = 'fieldSets';
+import {
+	storageFields,
+} from './constants';
 
 export function getExtracted() {
 	return new Promise((resolve, reject) => {
-		chrome.storage.local.get(EXTRACTED, ({[EXTRACTED]: extracted}) => {
+		chrome.storage.local.get(storageFields.EXTRACTED, ({[storageFields.EXTRACTED]: extracted}) => {
 			if (chrome.runtime.lastError) {
 				reject(chrome.runtime.lastError);
 			} else {
-				chrome.storage.local.remove(EXTRACTED, () => {
+				chrome.storage.local.remove(storageFields.EXTRACTED, () => {
 					if (chrome.runtime.lastError) {
 						reject(chrome.runtime.lastError);
 					} else {
@@ -22,7 +23,7 @@ export function getExtracted() {
 export function setExtracted(extracted) {
 	return new Promise((resolve, reject) => {
 		chrome.storage.local.set({
-			[EXTRACTED]: extracted,
+			[storageFields.EXTRACTED]: extracted,
 		}, () => {
 			if (chrome.runtime.lastError) {
 				reject(chrome.runtime.lastError);
@@ -35,11 +36,11 @@ export function setExtracted(extracted) {
 
 export function getFieldSets() {
 	return new Promise((resolve, reject) => {
-		chrome.storage.sync.get(FIELD_SETS, ({[FIELD_SETS]: fieldSets}) => {
+		chrome.storage.sync.get(storageFields.FIELD_SETS, ({[storageFields.FIELD_SETS]: fieldSets}) => {
 			if (chrome.runtime.lastError) {
 				reject(chrome.runtime.lastError);
 			} else {
-				resolve(fieldSets || []);
+				resolve(fieldSets);
 			}
 		});
 	});
@@ -48,7 +49,7 @@ export function getFieldSets() {
 export function setFieldSets(fieldSets) {
 	return new Promise((resolve, reject) => {
 		chrome.storage.sync.set({
-			[FIELD_SETS]: fieldSets,
+			[storageFields.FIELD_SETS]: fieldSets,
 		}, () => {
 			if (chrome.runtime.lastError) {
 				reject(chrome.runtime.lastError);

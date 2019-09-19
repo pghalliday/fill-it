@@ -7,6 +7,7 @@ i18n
 .use(LanguageDetector)
 .init({
 	debug: true,
+	fallbackLng: 'en-US',
 });
 
 export default i18n;

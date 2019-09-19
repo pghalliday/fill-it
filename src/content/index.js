@@ -1,8 +1,12 @@
-chrome.runtime.onConnect.addListener(function(port) {
-	port.onMessage.addListener(function(message) {
+import {
+	messageTypes,
+} from '../lib/constants';
+
+chrome.runtime.onConnect.addListener(port => {
+	port.onMessage.addListener(message => {
 		console.log(message);
 		switch (message.type) {
-			case 'EXTRACT': 
+			case messageTypes.EXTRACT: 
 				extract(port, message.data);
 				break;
 			default:
@@ -11,24 +15,24 @@ chrome.runtime.onConnect.addListener(function(port) {
 		}
 	});
 	port.postMessage({
-		type: 'CONNECTED',
+		type: messageTypes.CONNECTED,
 	})
 });
 
 function extract(port, query) {
 	const elements = Array.prototype.slice.call(document.getElementsByTagName('*'));
 	const tagNames = Object.keys(query.tags);
-	const fields = tagNames.reduce(function(fields, tagName) {
+	const fields = tagNames.reduce((fields, tagName) => {
 		fields[tagName] = query.fields.concat(query.tags[tagName].fields);
 		return fields;
 	}, {});
-	const list = elements.filter(function(element) {
+	const list = elements.filter(element => {
 		const tagName = element.tagName.toUpperCase();
 		const include = tagNames.indexOf(tagName) !== -1;
 		return include && checkExcludes(element, query.tags[tagName].excludes);
-	}).map(function(element) {
+	}).map(element => {
 		const tagName = element.tagName.toUpperCase();
-		const elementData = fields[tagName].reduce(function(data, field) {
+		const elementData = fields[tagName].reduce((data, field) => {
 			data[field] = element[field];
 			return data;
 		}, {});
@@ -36,19 +40,19 @@ function extract(port, query) {
 	});
 	console.log(list);
 	port.postMessage({
-		type: 'EXTRACTED',
+		type: messageTypes.EXTRACTED,
 		data: list,
 	});
 }
 
 function checkExcludes(element, excludes) {
-	return !excludes || excludes.reduce(function(include, exclude) {
+	return !excludes || excludes.reduce((include, exclude) => {
 		return include && checkExclude(element, exclude);
 	}, true);
 }
 
 function checkExclude(element, exclude) {
-	return Object.keys(exclude).reduce(function(include, field) {
+	return Object.keys(exclude).reduce((include, field) => {
 		return include || element[field] !== exclude[field];
 	}, false);
 }
