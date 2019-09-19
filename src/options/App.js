@@ -57,7 +57,12 @@ export class App extends React.Component {
 					<Box
 						width={[1, CONTENT_WIDTH]}
 						p={3}>
-						Content
+						<div>
+							{store.selectedPath}
+						</div>
+						<div>
+							<pre>{JSON.stringify(store.selectedFields, null, 2)}</pre>
+						</div>
 					</Box>
 				</Flex>
 				<div>

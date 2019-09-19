@@ -46,8 +46,38 @@ class Store {
 		});
 	}
 
+	@computed get entriesByUuid() {
+		return entriesByUuid(this.fieldSets, []);
+	}
+
+	@computed get selectedEntry() {
+		return this.entriesByUuid[this.selectedNode];
+	}
+
+	@computed get selectedPath() {
+		const entry = this.selectedEntry;
+		if (entry) {
+			return `/${entry.path.map(uuid => {
+				return this.entriesByUuid[uuid].entry.name;
+			}).join('/')}/${entry.entry.name}`;
+		} else {
+			return undefined;
+		}
+	}
+
+	@computed get selectedFields() {
+		const entry = this.selectedEntry;
+		if (entry) {
+			return entry.entry.fields;
+		} else {
+			return undefined;
+		}
+	}
+
 	selectNode(uuid) {
-		this.selectedNode = uuid;
+		if (this.entriesByUuid[uuid].entry.type === types.FIELD_SET) {
+			this.selectedNode = uuid;
+		}
 	}
 
 	expandNode(uuid) {
@@ -60,6 +90,29 @@ class Store {
 	collapseNode(uuid) {
 		this.expandedNodes = _.omit(this.expandedNodes, uuid);
 	}
+}
+
+function entriesByUuid(entries, path) {
+	return entries.reduce((map, entry) => {
+		map[entry.uuid] = {
+			entry: entry,
+			path,
+		};
+		switch (entry.type) {
+			case types.GROUP:
+				map = {
+					...map,
+					...entriesByUuid(entry.children, [...path, entry.uuid]),
+				};
+				break;
+			case types.FIELD_SET:
+				break;
+			default:
+				console.error(new Error(`Unknown type: ${entry.type}`))
+				break;
+		}
+		return map;
+	}, {});
 }
 
 function nodesFromEntries({entries, expandedNodes, selectedNode}) {

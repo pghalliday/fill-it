@@ -19,6 +19,8 @@ import {
 
 async function start() {
 	await store.init();
+	// Suspense component is required so that the app
+	// is suspended while the language file is lazily loaded
 	ReactDOM.render(
 		<Suspense fallback={<div>Loading...</div>}>
 			<I18nextProvider i18n={ i18n }>
