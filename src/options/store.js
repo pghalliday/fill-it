@@ -13,6 +13,11 @@ import {
 	types,
 	icons,
 } from '../lib/constants';
+import React from 'react';
+import {
+	Position,
+	Tooltip,
+} from '@blueprintjs/core';
 
 class Store {
 	@observable fieldSets;
@@ -86,7 +91,11 @@ function groupNodeFromEntry({entry, expandedNodes, selectedNode}) {
 		id: entry.uuid,
 		icon: isExpanded ? icons.FOLDER_OPEN : icons.FOLDER_CLOSE,
 		isExpanded,
-		label: entry.name,
+		label: (
+			<Tooltip content={entry.name} position={Position.RIGHT}>
+				{entry.name}
+			</Tooltip>
+		),
 		childNodes: nodesFromEntries({
 			entries: entry.children,
 			expandedNodes,
@@ -100,7 +109,11 @@ function fieldSetNodeFromEntry({entry, selectedNode}) {
 	return {
 		id: entry.uuid,
 		icon: icons.DOCUMENT,
-		label: entry.name,
+		label: (
+			<Tooltip content={entry.name} position={Position.RIGHT}>
+				{entry.name}
+			</Tooltip>
+		),
 		isSelected,
 	}
 }

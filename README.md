@@ -20,4 +20,4 @@ npm start
 
 The extension artifacts will be placed in the `dist` folder. Under `chrome://extensions/` enable `Developer mode` and use the `Load unpacked` button to add the `dist` folder for testing.
 
-The options UI has been created using [MobX and React](https://mobx.js.org/getting-started.html) and [Blueprint](https://blueprintjs.com/).
+The options UI has been created using [MobX and React](https://mobx.js.org/getting-started.html), [Blueprint](https://blueprintjs.com/) and [Reflexbox](https://rebassjs.org/reflexbox).

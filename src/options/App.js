@@ -5,7 +5,6 @@ import {
 import {
 	observer,
 } from 'mobx-react';
-
 import {
 	Navbar,
 	NavbarGroup,
@@ -16,6 +15,13 @@ import {
 	Alignment,
 	Classes,
 } from '@blueprintjs/core';
+import {
+	Flex,
+	Box,
+} from 'reflexbox'
+
+const TREE_WIDTH = 1/5;
+const CONTENT_WIDTH = 1 - TREE_WIDTH;
 
 @withTranslation()
 // WARNING: the observer decorator has to come after withTranslation or it does not work!!
@@ -36,13 +42,24 @@ export class App extends React.Component {
 				        <Button className="bp3-minimal" icon="menu" />
 					</NavbarGroup>
 				</Navbar>
-                <Tree
-                    contents={store.nodes}
-                    onNodeClick={this.handleNodeClick.bind(this)}
-                    onNodeCollapse={this.handleNodeCollapse.bind(this)}
-                    onNodeExpand={this.handleNodeExpand.bind(this)}
-                    className={Classes.ELEVATION_0}
-                />
+				<Flex flexWrap='wrap'>
+					<Box
+						width={[1, TREE_WIDTH]}
+						p={3}>
+		                <Tree
+		                    contents={store.nodes}
+		                    onNodeClick={this.handleNodeClick.bind(this)}
+		                    onNodeCollapse={this.handleNodeCollapse.bind(this)}
+		                    onNodeExpand={this.handleNodeExpand.bind(this)}
+		                    className={Classes.ELEVATION_0}
+		                />
+					</Box>
+					<Box
+						width={[1, CONTENT_WIDTH]}
+						p={3}>
+						Content
+					</Box>
+				</Flex>
 				<div>
 					<pre>{store.report}</pre>
 				</div>
