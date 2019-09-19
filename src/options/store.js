@@ -43,6 +43,7 @@ class Store {
 			entries: this.fieldSets,
 			expandedNodes: this.expandedNodes,
 			selectedNode: this.selectedNode,
+      selectedPath: this.selected ? this.selected.path : [],
 		});
 	}
 
@@ -50,25 +51,25 @@ class Store {
 		return entriesByUuid(this.fieldSets, []);
 	}
 
-	@computed get selectedEntry() {
+	@computed get selected() {
 		return this.entriesByUuid[this.selectedNode];
 	}
 
 	@computed get selectedPath() {
-		const entry = this.selectedEntry;
-		if (entry) {
-			return `/${entry.path.map(uuid => {
+		const selected = this.selected;
+		if (selected) {
+			return `/${selected.path.map(uuid => {
 				return this.entriesByUuid[uuid].entry.name;
-			}).join('/')}/${entry.entry.name}`;
+			}).join('/')}/${selected.entry.name}`;
 		} else {
 			return undefined;
 		}
 	}
 
 	@computed get selectedFields() {
-		const entry = this.selectedEntry;
-		if (entry) {
-			return entry.entry.fields;
+		const selected = this.selected;
+		if (selected) {
+			return selected.entry.fields;
 		} else {
 			return undefined;
 		}
@@ -77,14 +78,14 @@ class Store {
 	selectNode(uuid) {
 		if (this.entriesByUuid[uuid].entry.type === types.FIELD_SET) {
 			this.selectedNode = uuid;
-		}
+		};
 	}
 
 	expandNode(uuid) {
 		this.expandedNodes = {
 			...this.expandedNodes,
 			[uuid]: true,
-		}
+		};
 	}
 
 	collapseNode(uuid) {
@@ -108,14 +109,14 @@ function entriesByUuid(entries, path) {
 			case types.FIELD_SET:
 				break;
 			default:
-				console.error(new Error(`Unknown type: ${entry.type}`))
+				console.error(new Error(`Unknown type: ${entry.type}`));
 				break;
 		}
 		return map;
 	}, {});
 }
 
-function nodesFromEntries({entries, expandedNodes, selectedNode}) {
+function nodesFromEntries({entries, expandedNodes, selectedNode, selectedPath}) {
 	return entries.map(entry => {
 		switch (entry.type) {
 			case types.GROUP:
@@ -123,27 +124,29 @@ function nodesFromEntries({entries, expandedNodes, selectedNode}) {
 					entry,
 					expandedNodes,
 					selectedNode,
-				})
+          selectedPath,
+				});
 				break;
 			case types.FIELD_SET:
 				return fieldSetNodeFromEntry({
 					entry,
 					selectedNode,
-				})
+				});
 				break;
 			default:
-				console.error(new Error(`Unknown type: ${entry.type}`))
+				console.error(new Error(`Unknown type: ${entry.type}`));
 				break;
 		}
 	});
 }
 
-function groupNodeFromEntry({entry, expandedNodes, selectedNode}) {
+function groupNodeFromEntry({entry, expandedNodes, selectedNode, selectedPath}) {
 	const isExpanded = expandedNodes[entry.uuid];
 	return {
 		id: entry.uuid,
 		icon: isExpanded ? icons.FOLDER_OPEN : icons.FOLDER_CLOSE,
 		isExpanded,
+    isSelected: !isExpanded && selectedPath.indexOf(entry.uuid) !== -1,
 		label: (
 			<Tooltip content={entry.name} position={Position.RIGHT}>
 				{entry.name}
@@ -154,7 +157,7 @@ function groupNodeFromEntry({entry, expandedNodes, selectedNode}) {
 			expandedNodes,
 			selectedNode,
 		}),
-	}
+	};
 }
 
 function fieldSetNodeFromEntry({entry, selectedNode}) {
@@ -168,7 +171,7 @@ function fieldSetNodeFromEntry({entry, selectedNode}) {
 			</Tooltip>
 		),
 		isSelected,
-	}
+	};
 }
 
 export const store = new Store();
