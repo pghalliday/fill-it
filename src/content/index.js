@@ -10,7 +10,7 @@ chrome.runtime.onConnect.addListener(port => {
 				extract(port, message.data);
 				break;
 			default:
-				console.error(new Error('Unknown message type: ' + message.type))
+				console.error(new Error(`Unknown message type: ${message.type}`))
 				break;
 		}
 	});

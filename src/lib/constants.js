@@ -51,3 +51,9 @@ export const fields = {
 	TYPE: 'type',
 	INNER_HTML: 'innerHTML',
 }
+
+export const icons = {
+	DOCUMENT: 'document',
+	FOLDER_CLOSE: 'folder-close',
+	FOLDER_OPEN: 'folder-open',
+}

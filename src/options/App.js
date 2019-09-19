@@ -17,8 +17,9 @@ import {
 	Classes,
 } from '@blueprintjs/core';
 
-@observer
 @withTranslation()
+// WARNING: the observer decorator has to come after withTranslation or it does not work!!
+@observer
 export class App extends React.Component {
 	render() {
 		const {
@@ -37,9 +38,9 @@ export class App extends React.Component {
 				</Navbar>
                 <Tree
                     contents={store.nodes}
-                    onNodeClick={this.handleNodeClick}
-                    onNodeCollapse={this.handleNodeCollapse}
-                    onNodeExpand={this.handleNodeExpand}
+                    onNodeClick={this.handleNodeClick.bind(this)}
+                    onNodeCollapse={this.handleNodeCollapse.bind(this)}
+                    onNodeExpand={this.handleNodeExpand.bind(this)}
                     className={Classes.ELEVATION_0}
                 />
 				<div>
@@ -49,5 +50,15 @@ export class App extends React.Component {
 		);
 	}
 
+	handleNodeClick(nodeData) {
+		this.props.store.selectNode(nodeData.id);
+	}
 
+	handleNodeExpand(nodeData) {
+		this.props.store.expandNode(nodeData.id);
+	}
+
+	handleNodeCollapse(nodeData) {
+		this.props.store.collapseNode(nodeData.id);
+	}
 }

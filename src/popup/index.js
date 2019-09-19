@@ -44,7 +44,7 @@ chrome.tabs.query({active: true, currentWindow: true}, tabs => {
 				extract(message.data);
 				break;
 			default:
-				console.error(new Error('Unknown message type: ' + message.type))
+				console.error(new Error(`Unknown message type: ${message.type}`))
 				break;
 		}
 	});
