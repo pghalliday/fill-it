@@ -4,9 +4,13 @@
   "description": "A chrome extension to fill forms",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js",
-    "start": "webpack --config webpack.config.js --watch"
+    "cmd:lint": "eslint .",
+    "cmd:deploy": "node deploy.js",
+    "alarmist:deploy": "chokidar \"dist/**/*\" -c \"alarmist-npm cmd:deploy\"",
+    "alarmist:lint": "chokidar \"src/**/*\" -c \"alarmist-npm cmd:lint\"",
+    "alarmist:build": "alarmist-webpack -n cmd:build -c webpack.config.js",
+    "alarmist:serve": "alarmist-npm --service cmd:serve",
+    "start": "alarmist-monitor run-p alarmist:lint alarmist:build alarmist:deploy"
   },
   "repository": {
     "type": "git",
@@ -47,9 +51,19 @@
     "@babel/plugin-transform-runtime": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "alarmist": "^1.0.27",
+    "alarmist-npm": "^1.0.6",
+    "alarmist-webpack": "^1.0.11",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
+    "chokidar-cli": "^2.0.0",
     "css-loader": "^3.2.0",
+    "eslint": "^6.4.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.14.3",
     "file-loader": "^4.2.0",
+    "ncp": "^2.0.0",
+    "npm-run-all": "^4.1.5",
     "style-loader": "^1.0.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9"

@@ -12,6 +12,12 @@ After cloning run the following command to download dependencies
 npm install
 ```
 
+Copy `deploy-config.template.js` to `deploy-config.js` and edit as required
+
+```
+cp deploy-config.template.js deploy-config.js
+```
+
 Then to build and watch for changes
 
 ```

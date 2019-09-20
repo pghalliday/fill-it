@@ -5,3 +5,5 @@ dist/*.ttf
 dist/*.woff
 dist/*.eot
 dist/*.map
+.alarmist
+deploy-config.js
