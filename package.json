@@ -7,7 +7,7 @@
     "cmd:lint": "eslint .",
     "cmd:deploy": "node deploy.js",
     "alarmist:deploy": "chokidar \"dist/**/*\" -c \"alarmist-npm cmd:deploy\"",
-    "alarmist:lint": "chokidar \"src/**/*\" -c \"alarmist-npm cmd:lint\"",
+    "alarmist:lint": "chokidar \"**/*.js\" -i \".alarmist/**/*\" -i \".git/**/*\" -i \"dist/**/*\" -i \"node_modules/**/*\" -c \"alarmist-npm cmd:lint\"",
     "alarmist:build": "alarmist-webpack -n cmd:build -c webpack.config.js",
     "alarmist:serve": "alarmist-npm --service cmd:serve",
     "start": "alarmist-monitor run-p alarmist:lint alarmist:build alarmist:deploy"

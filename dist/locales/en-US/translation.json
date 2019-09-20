@@ -1,3 +1,8 @@
 {
-  "appName": "Fill It"
+  "appName": "Fill It",
+  "nameLabel": "Name",
+  "namePlaceholder": "Enter a name",
+  "urlLabel": "URL",
+  "urlPlaceholder": "Optionally enter a URL",
+  "requiredLabelInfo": "(required)"
 }

@@ -12,7 +12,8 @@ import {
   NavbarDivider,
   Button,
   Tree,
-  // EditableText,
+  FormGroup,
+  InputGroup,
   Alignment,
   Classes,
 } from '@blueprintjs/core';
@@ -60,20 +61,37 @@ export class App extends React.Component {
             width={[1, CONTENT_WIDTH]}
             p={3}>
             {store.selected ? (
-              <div>
+              <>
                 <div>
                   {store.selectedPath}
                 </div>
-                <div>
-                  {store.selectedName}
-                </div>
-                <div>
-                  {store.selectedUrl}
-                </div>
+                <FormGroup
+                  label={t('nameLabel')}
+                  labelFor="name-input"
+                  labelInfo={t('requiredLabelInfo')}
+                >
+                  <InputGroup
+                    id="name-input"
+                    placeholder={t('namePlaceholder')}
+                    value={store.selectedName}
+                    onChange={this.handleNameChange}
+                  />
+                </FormGroup>
+                <FormGroup
+                  label={t('urlLabel')}
+                  labelFor="url-input"
+                >
+                  <InputGroup
+                    id="url-input"
+                    placeholder={t('urlPlaceholder')}
+                    value={store.selectedUrl}
+                    onChange={this.handleUrlChange}
+                  />
+                </FormGroup>
                 <div>
                   <pre>{JSON.stringify(store.selectedFields, null, 2)}</pre>
                 </div>
-              </div>
+              </>
             ) : (
               <div>
                 Nothing selected
@@ -98,5 +116,11 @@ export class App extends React.Component {
 
   handleNodeCollapse(nodeData) {
     this.props.store.collapseNode(nodeData.id);
+  }
+
+  handleNameChange() {
+  }
+
+  handleUrlChange() {
   }
 }
