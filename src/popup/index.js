@@ -12,11 +12,13 @@ const query = {
   fields: [fields.TAG_NAME, fields.ID],
   tags: {
     [tagNames.INPUT]: {
-      fields: [fields.TYPE, fields.VALUE],
+      fields: [fields.TYPE, fields.VALUE, fields.CHECKED],
       excludes: [{
         type: inputTypes.HIDDEN,
       }, {
         type: inputTypes.BUTTON,
+      }, {
+        type: inputTypes.RESET,
       }, {
         type: inputTypes.SUBMIT,
       }, {

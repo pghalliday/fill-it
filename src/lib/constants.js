@@ -48,6 +48,7 @@ export const fields = {
   TAG_NAME: 'tagName',
   ID: 'id',
   VALUE: 'value',
+  CHECKED: 'checked',
   TYPE: 'type',
   INNER_HTML: 'innerHTML',
 };

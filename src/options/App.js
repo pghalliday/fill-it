@@ -10,7 +10,6 @@ import {
   NavbarGroup,
   NavbarHeading,
   NavbarDivider,
-  Button,
   Tree,
   FormGroup,
   InputGroup,
@@ -37,12 +36,18 @@ export class App extends React.Component {
     } = this.props;
 
     return (
-      <div>
-        <Navbar>
+      <>
+        <Navbar
+          fixedToTop="true"
+        >
           <NavbarGroup align={Alignment.LEFT}>
             <NavbarHeading>{t('appName')}</NavbarHeading>
             <NavbarDivider />
-            <Button className="bp3-minimal" icon="menu" />
+            <InputGroup
+              placeholder={t('pathPlaceholder')}
+              value={store.selectedPath}
+              onChange={this.handlePathChange}
+            />
           </NavbarGroup>
         </Navbar>
         <Flex flexWrap='wrap'>
@@ -62,13 +67,11 @@ export class App extends React.Component {
             p={3}>
             {store.selected ? (
               <>
-                <div>
-                  {store.selectedPath}
-                </div>
                 <FormGroup
                   label={t('nameLabel')}
                   labelFor="name-input"
                   labelInfo={t('requiredLabelInfo')}
+                  inline="true"
                 >
                   <InputGroup
                     id="name-input"
@@ -80,6 +83,7 @@ export class App extends React.Component {
                 <FormGroup
                   label={t('urlLabel')}
                   labelFor="url-input"
+                  inline="true"
                 >
                   <InputGroup
                     id="url-input"
@@ -102,7 +106,7 @@ export class App extends React.Component {
         <div>
           <pre>{store.report}</pre>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -118,9 +122,15 @@ export class App extends React.Component {
     this.props.store.collapseNode(nodeData.id);
   }
 
+  handlePathChange() {
+    console.log('handlePathChange');
+  }
+
   handleNameChange() {
+    console.log('handleNameChange');
   }
 
   handleUrlChange() {
+    console.log('handleUrlChange');
   }
 }
