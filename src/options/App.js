@@ -10,6 +10,7 @@ import {
   NavbarGroup,
   NavbarHeading,
   NavbarDivider,
+  Breadcrumbs,
   Tree,
   FormGroup,
   InputGroup,
@@ -43,11 +44,7 @@ export class App extends React.Component {
           <NavbarGroup align={Alignment.LEFT}>
             <NavbarHeading>{t('appName')}</NavbarHeading>
             <NavbarDivider />
-            <InputGroup
-              placeholder={t('pathPlaceholder')}
-              value={store.selectedPath}
-              onChange={this.handlePathChange}
-            />
+            <Breadcrumbs items={store.selectedPath} />
           </NavbarGroup>
         </Navbar>
         <Flex flexWrap='wrap'>

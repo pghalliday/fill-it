@@ -2,6 +2,21 @@ import {
   storageFields,
 } from './constants';
 
+export async function watchExtracted(callback) {
+  const notifyNewValue = (newValue) => {
+    if (newValue) {
+      callback(newValue);
+    }
+  };
+  notifyNewValue(await getExtracted());
+  chrome.storage.local.onChanged.addListener(async (changes) => {
+    const extractedChanges = changes[storageFields.EXTRACTED];
+    if (extractedChanges) {
+      notifyNewValue(await getExtracted());
+    }
+  });
+}
+
 export function getExtracted() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(storageFields.EXTRACTED, ({

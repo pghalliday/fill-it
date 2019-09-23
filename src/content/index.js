@@ -25,7 +25,11 @@ function extract(port, query) {
   );
   const tagNames = Object.keys(query.tags);
   const fields = tagNames.reduce((fields, tagName) => {
-    fields[tagName] = query.fields.concat(query.tags[tagName].fields);
+    console.log(query.tags[tagName].fields);
+    fields[tagName] = {
+      ...query.fields,
+      ...query.tags[tagName].fields,
+    };
     return fields;
   }, {});
   const list = elements.filter((element) => {
@@ -34,8 +38,9 @@ function extract(port, query) {
     return include && checkExcludes(element, query.tags[tagName].excludes);
   }).map((element) => {
     const tagName = element.tagName.toUpperCase();
-    const elementData = fields[tagName].reduce((data, field) => {
-      data[field] = element[field];
+    const f = fields[tagName];
+    const elementData = Object.keys(f).reduce((data, field) => {
+      data[field] = getField(element, f[field]);
       return data;
     }, {});
     return elementData;
@@ -48,6 +53,14 @@ function extract(port, query) {
       list,
     },
   });
+}
+
+function getField(obj, props) {
+  if (props.length > 0) {
+    return getField(obj[props[0]], props.slice(1));
+  } else {
+    return obj;
+  }
 }
 
 function checkExcludes(element, excludes) {

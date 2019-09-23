@@ -4,7 +4,7 @@ import {
 } from 'mobx';
 import {
   getFieldSets,
-  getExtracted,
+  watchExtracted,
 } from '../lib/chrome-storage';
 import _ from 'lodash';
 import {
@@ -16,23 +16,19 @@ import {
   Position,
   Tooltip,
 } from '@blueprintjs/core';
+import i18n from './i18n';
+const t = i18n.t.bind(i18n);
 
 class Store {
   @observable fieldSets;
-  @observable extracted;
   @observable error;
   @observable expandedNodes = {};
   @observable selectedNode;
 
   async init() {
     try {
-      [
-        this.fieldSets,
-        this.extracted,
-      ] = await Promise.all([
-        getFieldSets(),
-        getExtracted(),
-      ]);
+      this.fieldSets = await getFieldSets(),
+      watchExtracted(this.newExtracted.bind(this));
     } catch (error) {
       this.error = error.toString();
     }
@@ -62,11 +58,23 @@ class Store {
   @computed get selectedPath() {
     const selected = this.selected;
     if (selected) {
-      return `/${selected.path.map((uuid) => {
-        return this.entriesByUuid[uuid].entry.name;
-      }).join('/')}/${selected.entry.name}`;
+      return [...selected.path.map((group, index) => ({
+        icon: icons.FOLDER_CLOSE,
+        text: this.entriesByUuid[group].entry.name,
+        onClick: this.expandNodes.bind(
+            this,
+            selected.path.slice(0, index),
+        ),
+      })), {
+        icon: icons.DOCUMENT,
+        text: selected.entry.name,
+        onClick: this.expandNodes.bind(
+            this,
+            selected.path,
+        ),
+      }];
     } else {
-      return undefined;
+      return [];
     }
   }
 
@@ -97,10 +105,19 @@ class Store {
     }
   }
 
+  async newExtracted(data) {
+    console.log(data);
+    console.log(t('extractedGroup'));
+  }
+
   selectNode(uuid) {
     if (this.entriesByUuid[uuid].entry.type === types.FIELD_SET) {
       this.selectedNode = uuid;
     };
+  }
+
+  expandNodes(uuids) {
+    uuids.forEach(this.expandNode.bind(this));
   }
 
   expandNode(uuid) {

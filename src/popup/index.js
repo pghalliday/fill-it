@@ -9,10 +9,17 @@ import {
 } from '../lib/chrome-storage';
 
 const query = {
-  fields: [fields.TAG_NAME, fields.ID],
+  fields: {
+    [fields.TAG_NAME]: [fields.TAG_NAME],
+  },
   tags: {
     [tagNames.INPUT]: {
-      fields: [fields.TYPE, fields.VALUE, fields.CHECKED],
+      fields: {
+        [fields.TYPE]: [fields.TYPE],
+        [fields.VALUE]: [fields.VALUE],
+        [fields.CHECKED]: [fields.CHECKED],
+        [fields.ID]: [fields.ID],
+      },
       excludes: [{
         type: inputTypes.HIDDEN,
       }, {
@@ -26,7 +33,24 @@ const query = {
       }],
     },
     [tagNames.TEXTAREA]: {
-      fields: [fields.INNER_HTML],
+      fields: {
+        [fields.TEXT_CONTENT]: [fields.TEXT_CONTENT],
+        [fields.ID]: [fields.ID],
+      },
+    },
+    [tagNames.SELECT]: {
+      fields: {
+        [fields.VALUE]: [fields.VALUE],
+        [fields.MULTIPLE]: [fields.MULTIPLE],
+        [fields.ID]: [fields.ID],
+      },
+    },
+    [tagNames.LABEL]: {
+      fields: {
+        [fields.TEXT_CONTENT]: [fields.TEXT_CONTENT],
+        [fields.FOR]: [fields.ATTRIBUTES, fields.FOR, fields.VALUE],
+        [fields.PARENT_ID]: [fields.PARENT_NODE, fields.ID],
+      },
     },
   },
 };

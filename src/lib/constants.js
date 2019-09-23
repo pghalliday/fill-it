@@ -17,6 +17,8 @@ export const storageFields = {
 export const tagNames = {
   INPUT: 'INPUT',
   TEXTAREA: 'TEXTAREA',
+  SELECT: 'SELECT',
+  LABEL: 'LABEL',
 };
 
 export const inputTypes = {
@@ -50,7 +52,12 @@ export const fields = {
   VALUE: 'value',
   CHECKED: 'checked',
   TYPE: 'type',
-  INNER_HTML: 'innerHTML',
+  TEXT_CONTENT: 'textContent',
+  FOR: 'for',
+  PARENT_ID: 'parentId',
+  PARENT_NODE: 'parentNode',
+  ATTRIBUTES: 'attributes',
+  MULTIPLE: 'multiple',
 };
 
 export const icons = {
