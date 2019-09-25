@@ -1,9 +1,12 @@
+import uuidv4 from 'uuid/v4';
 import {
   observable,
   computed,
+  action,
 } from 'mobx';
 import {
   getFieldSets,
+  setFieldSets,
   watchExtracted,
 } from '../lib/chrome-storage';
 import _ from 'lodash';
@@ -19,18 +22,41 @@ import {
 import i18n from './i18n';
 const t = i18n.t.bind(i18n);
 
+@storageClass({
+  fieldSets: setFieldSets,
+})
 class Store {
-  @observable fieldSets;
-  @observable error;
+  @observable fieldSets = [];
+  @observable errors = [];
   @observable expandedNodes = {};
   @observable selectedNode;
 
-  async init() {
+  @action.bound async init() {
     try {
       this.fieldSets = await getFieldSets(),
       watchExtracted(this.newExtracted.bind(this));
     } catch (error) {
-      this.error = error.toString();
+      this.error = error;
+    }
+  }
+
+  @computed get errorCount() {
+    return this.errors.length;
+  }
+
+  @computed get error() {
+    return this.errors[0];
+  }
+
+  @action.bound dismissError() {
+    this.errors.shift();
+  }
+
+  @action.bound set error(error) {
+    if (error) {
+      this.errors.push(error);
+    } else {
+      this.dismissError();
     }
   }
 
@@ -105,31 +131,84 @@ class Store {
     }
   }
 
-  async newExtracted(data) {
+  @action.bound @storage async newExtracted(data) {
     console.log(data);
     console.log(t('extractedGroup'));
+    this.addGroup(t('extractedGroup'));
   }
 
-  selectNode(uuid) {
+  @action.bound selectNode(uuid) {
     if (this.entriesByUuid[uuid].entry.type === types.FIELD_SET) {
       this.selectedNode = uuid;
     };
   }
 
-  expandNodes(uuids) {
+  @action.bound expandNodes(uuids) {
     uuids.forEach(this.expandNode.bind(this));
   }
 
-  expandNode(uuid) {
+  @action.bound expandNode(uuid) {
     this.expandedNodes = {
       ...this.expandedNodes,
       [uuid]: true,
     };
   }
 
-  collapseNode(uuid) {
+  @action.bound collapseNode(uuid) {
     this.expandedNodes = _.omit(this.expandedNodes, uuid);
   }
+
+  @action.bound @storage async addGroup(name, parentUuid) {
+    const parentCollection =
+      parentUuid ?
+      this.entriesByUuid[parentUuid].entry.children :
+      this.fieldSets;
+    if (_.find(parentCollection, (node) => node.name === name)) {
+      // group already exists!
+    } else {
+      parentCollection.push({
+        uuid: uuidv4(),
+        type: types.GROUP,
+        children: [],
+        name,
+      });
+    }
+  }
+}
+
+function storageClass(storageFields) {
+  return function(Class) {
+    return (...args) => {
+      const instance = new Class(...args);
+      instance._storageChangeCount = 0;
+      instance._storageFields = storageFields;
+      return instance;
+    };
+  };
+}
+
+function storage(target, name, descriptor) {
+  const original = descriptor.value;
+  if (typeof original === 'function') {
+    descriptor.value = async function(...args) {
+      this._storageChangeCount++;
+      await original.apply(this, args);
+      this._storageChangeCount--;
+      if (this._storageChangeCount === 0) {
+        try {
+          await Promise.all(_.map(this._storageFields, (updateFunc, field) => {
+            console.log(this[field]);
+            const data = this[field].toJS();
+            console.log(data);
+            return updateFunc(data);
+          }));
+        } catch (error) {
+          this.error = error;
+        }
+      }
+    };
+  }
+  return descriptor;
 }
 
 function entriesByUuid(entries, path) {

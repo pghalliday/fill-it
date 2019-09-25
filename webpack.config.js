@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  devtool: 'inline-source-map',
   entry: {
     background: './src/background/index.js',
     popup: './src/popup/index.js',
