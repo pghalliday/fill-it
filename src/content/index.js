@@ -57,7 +57,12 @@ function extract(port, query) {
 
 function getField(obj, props) {
   if (props.length > 0) {
-    return getField(obj[props[0]], props.slice(1));
+    if (typeof obj[props[0]] === 'undefined') {
+      // field does not exist so return undefined
+      return;
+    } else {
+      return getField(obj[props[0]], props.slice(1));
+    }
   } else {
     return obj;
   }

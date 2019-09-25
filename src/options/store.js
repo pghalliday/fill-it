@@ -3,6 +3,7 @@ import {
   observable,
   computed,
   action,
+  toJS,
 } from 'mobx';
 import {
   getFieldSets,
@@ -197,9 +198,7 @@ function storage(target, name, descriptor) {
       if (this._storageChangeCount === 0) {
         try {
           await Promise.all(_.map(this._storageFields, (updateFunc, field) => {
-            console.log(this[field]);
-            const data = this[field].toJS();
-            console.log(data);
+            const data = toJS(this[field]);
             return updateFunc(data);
           }));
         } catch (error) {
