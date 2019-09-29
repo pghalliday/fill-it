@@ -100,9 +100,6 @@ export class App extends React.Component {
             )}
           </Box>
         </Flex>
-        <div>
-          <pre>{store.report}</pre>
-        </div>
       </>
     );
   }
