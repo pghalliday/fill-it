@@ -16,6 +16,9 @@ import {
   InputGroup,
   Alignment,
   Classes,
+  ContextMenu,
+  Menu,
+  MenuItem,
 } from '@blueprintjs/core';
 import {
   Flex,
@@ -56,6 +59,7 @@ export class App extends React.Component {
               onNodeClick={this.handleNodeClick.bind(this)}
               onNodeCollapse={this.handleNodeCollapse.bind(this)}
               onNodeExpand={this.handleNodeExpand.bind(this)}
+              onNodeContextMenu={this.handleNodeContextMenu.bind(this, t)}
               className={Classes.ELEVATION_0}
             />
           </Box>
@@ -116,8 +120,21 @@ export class App extends React.Component {
     this.props.store.collapseNode(nodeData.id);
   }
 
-  handlePathChange() {
-    console.log('handlePathChange');
+  handleNodeContextMenu(t, nodeData, path, e) {
+    e.preventDefault();
+    ContextMenu.show(
+        <Menu>
+          <MenuItem
+            text={t('menuRename')}
+            onClick={() => this.renameNode(nodeData.id)}
+          />
+        </Menu>,
+        {left: e.clientX, top: e.clientY},
+    );
+  }
+
+  renameNode(uuid) {
+    console.log(uuid);
   }
 
   handleNameChange() {

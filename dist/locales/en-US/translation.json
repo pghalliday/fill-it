@@ -7,5 +7,6 @@
   "urlPlaceholder": "Optionally enter a URL",
   "requiredLabelInfo": "(required)",
   "extractedGroup": "_extracted_",
-  "fieldSetExistsError": "Field set with name, \"{{name}}\", already exists in this group"
+  "fieldSetExistsError": "Field set with name, \"{{name}}\", already exists in this group",
+  "menuRename": "rename"
 }
