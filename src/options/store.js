@@ -126,16 +126,22 @@ class Store {
   @computed get selectedFields() {
     const selected = this.selected;
     if (selected) {
-      return selected.entry.fields;
+      return selected.entry.list;
     } else {
       return undefined;
     }
   }
 
   @action.bound @storage async newExtracted(data) {
-    console.log(data);
-    console.log(t('extractedGroup'));
-    this.addGroup(t('extractedGroup'));
+    const group = await this.addGroup(t('extractedGroup'));
+    console.log(group);
+    const fieldSet = await this.addFieldSet({
+      name: new Date().toISOString(),
+      ...data,
+    }, group.uuid);
+    const entry = this.entriesByUuid[fieldSet.uuid];
+    this.selectNode(entry.entry.uuid);
+    this.expandNodes(entry.path);
   }
 
   @action.bound selectNode(uuid) {
@@ -164,15 +170,40 @@ class Store {
       parentUuid ?
       this.entriesByUuid[parentUuid].entry.children :
       this.fieldSets;
-    if (_.find(parentCollection, (node) => node.name === name)) {
-      // group already exists!
+    let group = _.find(parentCollection, (node) => node.name === name);
+    if (group) {
+      return group;
     } else {
-      parentCollection.push({
-        uuid: uuidv4(),
+      group = {
         type: types.GROUP,
+        uuid: uuidv4(),
         children: [],
         name,
-      });
+      };
+      parentCollection.push(group);
+      return group;
+    }
+  }
+
+  @action.bound @storage async addFieldSet(data, parentUuid) {
+    console.log(parentUuid);
+    const parentCollection =
+      parentUuid ?
+      this.entriesByUuid[parentUuid].entry.children :
+      this.fieldSets;
+    console.log(parentCollection);
+    let fieldSet = _.find(parentCollection, (node) => node.name === data.name);
+    if (fieldSet) {
+      this.error = new Error(t('fieldSetExistsError', data));
+      return fieldSet;
+    } else {
+      fieldSet = {
+        type: types.FIELD_SET,
+        uuid: uuidv4(),
+        ...data,
+      };
+      parentCollection.push(fieldSet);
+      return fieldSet;
     }
   }
 }
@@ -193,7 +224,7 @@ function storage(target, name, descriptor) {
   if (typeof original === 'function') {
     descriptor.value = async function(...args) {
       this._storageChangeCount++;
-      await original.apply(this, args);
+      const ret = await original.apply(this, args);
       this._storageChangeCount--;
       if (this._storageChangeCount === 0) {
         try {
@@ -205,6 +236,7 @@ function storage(target, name, descriptor) {
           this.error = error;
         }
       }
+      return ret;
     };
   }
   return descriptor;
@@ -259,6 +291,20 @@ function nodesFromEntries({
         console.error(new Error(`Unknown type: ${entry.type}`));
         break;
     }
+  }).sort((a, b) => {
+    if (a.nodeData.type === types.GROUP) {
+      if (b.nodeData.type === types.GROUP) {
+        return a.nodeData.name.localeCompare(b.nodeData.name);
+      } else {
+        return -1;
+      }
+    } else {
+      if (b.nodeData.type === types.GROUP) {
+        return 1;
+      } else {
+        return a.nodeData.name.localeCompare(b.nodeData.name);
+      }
+    }
   });
 }
 
@@ -284,6 +330,7 @@ function groupNodeFromEntry({
       expandedNodes,
       selectedNode,
     }),
+    nodeData: entry,
   };
 }
 
@@ -298,6 +345,7 @@ function fieldSetNodeFromEntry({entry, selectedNode}) {
       </Tooltip>
     ),
     isSelected,
+    nodeData: entry,
   };
 }
 

@@ -18,7 +18,7 @@ const DEFAULT_FIELD_SETS = [{
     type: types.FIELD_SET,
     name: 'foo',
     url: 'https://foo.com/',
-    fields: [{
+    list: [{
       id: 'foo input 1',
       tagName: tagNames.INPUT,
       type: inputTypes.TEXT,
@@ -34,7 +34,7 @@ const DEFAULT_FIELD_SETS = [{
     type: types.FIELD_SET,
     name: 'bar',
     url: 'https://bar.com/',
-    fields: [{
+    list: [{
       tagName: tagNames.INPUT,
       type: inputTypes.TEXT,
       id: 'bar input 1',
