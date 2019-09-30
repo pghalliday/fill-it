@@ -91,7 +91,7 @@ export class App extends React.Component {
               </>
             ) : (
               <div>
-                Nothing selected
+                {t('nothingSelected')}
               </div>
             )}
           </Box>

@@ -4,7 +4,7 @@
   "urlPlaceholder": "Optionally enter a URL",
   "requiredLabelInfo": "(required)",
   "extractedGroup": "_extracted_",
-  "fieldSetExistsError": "Field set with name, \"{{name}}\", already exists in this group",
+  "fieldSetExistsError": "Field set with name, \"{{name}}\", already exists in this folder",
   "menuRename": "Rename",
   "menuDelete": "Delete",
   "menuNew": "New",
@@ -14,5 +14,6 @@
   "menuCut": "Cut",
   "menuCopy": "Copy",
   "menuPaste": "Paste",
-  "rootNodeName": "Field sets"
+  "rootNodeName": "Field sets",
+  "nothingSelected": "Nothing selected"
 }
