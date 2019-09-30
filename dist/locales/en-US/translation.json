@@ -5,5 +5,14 @@
   "requiredLabelInfo": "(required)",
   "extractedGroup": "_extracted_",
   "fieldSetExistsError": "Field set with name, \"{{name}}\", already exists in this group",
-  "menuRename": "Rename"
+  "menuRename": "Rename",
+  "menuDelete": "Delete",
+  "menuNew": "New",
+  "menuNewGroup": "New folder",
+  "menuImport": "Import",
+  "menuExport": "Export",
+  "menuCut": "Cut",
+  "menuCopy": "Copy",
+  "menuPaste": "Paste",
+  "rootNodeName": "Field sets"
 }

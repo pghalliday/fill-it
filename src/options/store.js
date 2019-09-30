@@ -66,7 +66,7 @@ class Store {
   }
 
   @computed get nodes() {
-    return nodesFromEntries({
+    return rootNode({
       entries: this.fieldSets,
       expandedNodes: this.expandedNodes,
       selectedNode: this.selectedNode,
@@ -163,6 +163,16 @@ class Store {
 
   @action.bound collapseNode(uuid) {
     this.expandedNodes = _.omit(this.expandedNodes, uuid);
+  }
+
+  @action.bound toggleExpanded(uuid) {
+    if (this.entriesByUuid[uuid].entry.type === types.GROUP) {
+      if (this.expandedNodes[uuid]) {
+        this.collapseNode(uuid);
+      } else {
+        this.expandNode(uuid);
+      }
+    };
   }
 
   @action.bound @storage async addGroup(name, parentUuid) {
@@ -265,6 +275,28 @@ function entriesByUuid(entries, path) {
   }, {});
 }
 
+function rootNode({
+  entries,
+  expandedNodes,
+  selectedNode,
+  selectedPath,
+}) {
+  return [{
+    id: 0,
+    icon: icons.ROOT,
+    isExpanded: true,
+    hasCaret: false,
+    isSelected: false,
+    label: nodeLabel(t('rootNodeName')),
+    childNodes: nodesFromEntries({
+      entries,
+      expandedNodes,
+      selectedNode,
+      selectedPath,
+    }),
+  }];
+}
+
 function nodesFromEntries({
   entries,
   expandedNodes,
@@ -320,11 +352,7 @@ function groupNodeFromEntry({
     icon: isExpanded ? icons.FOLDER_OPEN : icons.FOLDER_CLOSE,
     isExpanded,
     isSelected: !isExpanded && selectedPath.indexOf(entry.uuid) !== -1,
-    label: (
-      <Tooltip content={entry.name} position={Position.RIGHT}>
-        {entry.name}
-      </Tooltip>
-    ),
+    label: nodeLabel(entry.name),
     childNodes: nodesFromEntries({
       entries: entry.children,
       expandedNodes,
@@ -339,14 +367,18 @@ function fieldSetNodeFromEntry({entry, selectedNode}) {
   return {
     id: entry.uuid,
     icon: icons.DOCUMENT,
-    label: (
-      <Tooltip content={entry.name} position={Position.RIGHT}>
-        {entry.name}
-      </Tooltip>
-    ),
+    label: nodeLabel(entry.name),
     isSelected,
     nodeData: entry,
   };
+}
+
+function nodeLabel(name) {
+  return (
+    <Tooltip content={name} position={Position.RIGHT}>
+      {name}
+    </Tooltip>
+  );
 }
 
 export const store = new Store();
