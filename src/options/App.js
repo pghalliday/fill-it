@@ -69,19 +69,6 @@ export class App extends React.Component {
             {store.selected ? (
               <>
                 <FormGroup
-                  label={t('nameLabel')}
-                  labelFor="name-input"
-                  labelInfo={t('requiredLabelInfo')}
-                  inline="true"
-                >
-                  <InputGroup
-                    id="name-input"
-                    placeholder={t('namePlaceholder')}
-                    value={store.selectedName}
-                    onChange={this.handleNameChange}
-                  />
-                </FormGroup>
-                <FormGroup
                   label={t('urlLabel')}
                   labelFor="url-input"
                   inline="true"
@@ -135,10 +122,6 @@ export class App extends React.Component {
 
   renameNode(uuid) {
     console.log(uuid);
-  }
-
-  handleNameChange() {
-    console.log('handleNameChange');
   }
 
   handleUrlChange() {
